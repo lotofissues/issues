@@ -12,15 +12,42 @@ jobs:
   create_issues:
     runs-on: ubuntu-latest
     steps:
-      - name: Create 900 issues
+      - name: Create 900 issues (AM)
+        if: github.event_name == 'schedule' && github.event.schedule == '0 0 * * *'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           for i in $(seq 1 900); do
             gh issue create \
-              --title "issue #$i for $(date "+%F")" \
+              --title "issue #${i}a for $(date "+%F")" \
               --body "wow thats a lot of issues" \
               --repo "${{ github.repository }}"
-            echo "Created issue #${i}"
+            echo "Created issue #${i}a"
+            sleep 1
+          done
+      - name: Create 900 issues (PM)
+        if: github.event_name == 'schedule' && github.event.schedule == '0 12 * * *'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for i in $(seq 1 900); do
+            gh issue create \
+              --title "issue #${i}b for $(date "+%F")" \
+              --body "wow thats a lot of issues" \
+              --repo "${{ github.repository }}"
+            echo "Created issue #${i}b"
+            sleep 1
+          done
+      - name: Create 900 issues (Manual)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for i in $(seq 1 900); do
+            gh issue create \
+              --title "issue #${i}x for $(date "+%F")" \
+              --body "wow thats a lot of issues" \
+              --repo "${{ github.repository }}"
+            echo "Created issue #${i}x"
             sleep 1
           done
