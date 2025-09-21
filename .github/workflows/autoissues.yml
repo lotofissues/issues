@@ -2,7 +2,7 @@ name: Auto Issues
 
 on:
   schedule:
-    - cron: '0 0,12 * * *'
+    - cron: '0 0,6,12,18 * * *'
   workflow_dispatch:
 
 permissions:
@@ -12,42 +12,21 @@ jobs:
   create_issues:
     runs-on: ubuntu-latest
     steps:
-      - name: Create 900 issues (AM)
-        if: github.event_name == 'schedule' && github.event.schedule == '0 0 * * *'
+      - name: Create 500 issues
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          for i in $(seq 1 900); do
+          t=$(date -u +%H)
+          if   [[ "$t" == "00" ]]; then v="a"
+          elif [[ "$t" == "06" ]]; then v="b"
+          elif [[ "$t" == "12" ]]; then v="c"
+          elif [[ "$t" == "18" ]]; then v="d"
+          else                          v="x" fi          
+          for i in $(seq 1 500); do
             gh issue create \
-              --title "issue #${i}a for $(date "+%F")" \
+              --title "issue #${i}${v} for $(date "+%F")" \
               --body "wow thats a lot of issues" \
               --repo "${{ github.repository }}"
-            echo "Created issue #${i}a"
-            sleep 1
-          done
-      - name: Create 900 issues (PM)
-        if: github.event_name == 'schedule' && github.event.schedule == '0 12 * * *'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          for i in $(seq 1 900); do
-            gh issue create \
-              --title "issue #${i}b for $(date "+%F")" \
-              --body "wow thats a lot of issues" \
-              --repo "${{ github.repository }}"
-            echo "Created issue #${i}b"
-            sleep 1
-          done
-      - name: Create 900 issues (Manual)
-        if: github.event_name == 'workflow_dispatch'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          for i in $(seq 1 900); do
-            gh issue create \
-              --title "issue #${i}x for $(date "+%F")" \
-              --body "wow thats a lot of issues" \
-              --repo "${{ github.repository }}"
-            echo "Created issue #${i}x"
+            echo "Created issue #${i}${v}"
             sleep 1
           done
