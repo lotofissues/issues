@@ -1,0 +1,26 @@
+name: Auto Issues
+
+on:
+  schedule:
+    - cron: '0 0,12 * * *'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  create_issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create 900 issues
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for i in $(seq 1 900); do
+            gh issue create \
+              --title "issue #$i for $(date "+%F")" \
+              --body "wow thats a lot of issues" \
+              --repo "${{ github.repository }}"
+            echo "Created issue #${i}"
+            sleep 1
+          done
