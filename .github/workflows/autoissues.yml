@@ -2,7 +2,7 @@ name: Auto Issues
 
 on:
   schedule:
-    - cron: '0 0,6,12,18 * * *'
+    - cron: '0 */2 * * *'
   workflow_dispatch:
 
 permissions:
@@ -17,11 +17,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           t=$(date -u +%H)
-          if   [[ "$t" == "00" ]]; then v="a"
-          elif [[ "$t" == "06" ]]; then v="b"
-          elif [[ "$t" == "12" ]]; then v="c"
-          elif [[ "$t" == "18" ]]; then v="d"
-          else                          v="x"; fi          
+          printf -v v \\x%x $((97 + t/2))
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            v="x"
+          fi
           for i in $(seq 1 500); do
             gh issue create \
               --title "issue #${i}${v} for $(date "+%F")" \
