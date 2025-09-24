@@ -21,7 +21,7 @@ jobs:
           elif [[ "$t" == "06" ]]; then v="b"
           elif [[ "$t" == "12" ]]; then v="c"
           elif [[ "$t" == "18" ]]; then v="d"
-          else                          v="x" fi          
+          else                          v="x"; fi          
           for i in $(seq 1 500); do
             gh issue create \
               --title "issue #${i}${v} for $(date "+%F")" \
