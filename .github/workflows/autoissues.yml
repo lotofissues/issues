@@ -16,8 +16,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          t=$(date -u +%H)
-          printf -v v \\x$(printf %x $((97 + 16/2)))
+          printf -v v \\x$(printf %x $((97 + $(date -u +%H)/2)))
           if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
             v="x"
           fi
