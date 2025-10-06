@@ -12,7 +12,7 @@ jobs:
   create_issues:
     runs-on: ubuntu-latest
     steps:
-      - name: Create 750 issues
+      - name: Create 500 issues
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -20,7 +20,7 @@ jobs:
           if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
             v="x"
           fi
-          for i in $(seq 1 750); do
+          for i in $(seq 1 500); do
             gh issue create \
               --title "issue #${i}${v} for $(date "+%F")" \
               --body "wow thats a lot of issues" \
